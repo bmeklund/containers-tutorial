@@ -40,9 +40,6 @@ jobs:
           name: site
           path: "${{ github.workspace }}/${{ env.SITE_DIR }}"
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: actions/deploy-pages@v4
         with:
-          # ACCESS_TOKEN: # optional
-          token: "${{ github.token}}"
-          FOLDER: "${{ env.SITE_DIR }}"
-          commit-message: "[CI] Publish Documentation for ${{ github.sha }}"
+          artifact_name: site
