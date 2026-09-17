@@ -11,43 +11,48 @@ TIP: Buildah is a dockerless technology; you don't need any Docker Host to build
 
 == Preparation
 
-In a terminal window, start the container having `buildah` installed:
+In a terminal window, you need to login again to your container registry using Buildah:
 
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-podman run -it --device /dev/fuse:rw --security-opt seccomp=unconfined --security-opt apparmor=unconfined quay.io/buildah/stable:latest bash
+buildah login \
+  -u "$(oc whoami)" \
+  -p "$(oc whoami -t)" \
+  image-registry.openshift-image-registry.svc:5000
 ----
 
-Now you are inside the `buildah` container, for such a reason, you need to login again to your container registry:
+[NOTE]
+If you have been logged out of OpenShift, please first log in again using oc login(sopy login command in openshift console- similar to below)
 
-[.console-input]
+
 [source,bash,subs="+macros,+attributes"]
 ----
-buildah login quay.io
+oc login --token=sha256~g9DUZtk7WxYICWWAMghJMaJw4MSvouD4 --server=https://api.rm1.0a51.p1.openshiftapps.com:6443
 ----
-
-Replace `quay.io` with `docker.io` if you prefer Docker Hub.
 
 == Creating a Container Image
 
-Create a `Dockerfile` file, for this simple example, type `vi Dockerfile` and copy the content shown in the snippet:
+Create a `Dockerfile` file, for this simple example, copy the content shown in the snippet:
 
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
+cat <<EOF >Dockerfile
 FROM alpine:3.17.3
 
 CMD ["echo", "'Hello World'"]
+
+EOF
+
 ----
 
-Then exit `vi` (no joke, please) by typing `:wq!`.
 When you are back in the shell, use `buildah` to build the container:
 
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-buildah build -t quay.io/your-username/hello:latest
+buildah build -t image-registry.openshift-image-registry.svc:5000/your-username/hello:latest
 ----
 
 [.console-output]
@@ -85,9 +90,9 @@ buildah images
 [.console-output]
 [source,bash,subs="+macros,+attributes"]
 ----
-REPOSITORY                            TAG         IMAGE ID      CREATED        SIZE
-quay.io/your-username/hello           latest      9baf06d1b691  6 minutes ago  7.34 MB
-docker.io/library/alpine              3.17.3      9ed4aefc74f6  2 years ago    7.34 MB
+REPOSITORY                                                                    TAG         IMAGE ID      CREATED        SIZE
+image-registry.openshift-image-registry.svc:5000/your-username/hello:latest   latest      9baf06d1b691  6 minutes ago  7.34 MB
+docker.io/library/alpine                                                      3.17.3      9ed4aefc74f6  2 years ago    7.34 MB
 ----
 
 == Pushing a Container Image
@@ -97,7 +102,7 @@ To push the image to the container registry:
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-buildah push --tls-verify=false quay.io/your-username/hello:latest quay.io/your-username/hello:latest
+buildah push image-registry.openshift-image-registry.svc:5000/your-username/hello:latest
 ----
 
 [.console-output]
@@ -117,5 +122,6 @@ Writing manifest to image destination
 Storing signatures
 ----
 
-A Linux container has been created and pushed to the registry from another Linux container. 
-You can stop the `buildah` container by typing `exit`.
+A container has been created and pushed to the registry. Open the OpenShift console to verify your image.
+
+image::buildah-image-ocp.png[alt="Image showing in OpenShift", align="center"]

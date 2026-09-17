@@ -161,29 +161,13 @@ drwxr-xr-x  25 asotobu  staff   800B Apr 11 16:36 ..
 In the previous case, we copied container from a remote registry to local directory.
 Let's copy a container from a remote registry to a local registry (the one running inside Docker/Podman).
 
-Having a Docker Host running in local machine, run the following command:
+Run the following command:
 
-[tabs]
-====
-Docker::
-+
---
-[.console-input]
-[source,bash,subs="+macros,+attributes"]
-----
-skopeo copy docker://quay.io/rhdevelopers/quarkus-demo:v1 docker-daemon:docker.io/rhdevelopers/quarkus-demo:skopeo
-----
---
-Podman::
-+
---
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
 skopeo copy docker://quay.io/rhdevelopers/quarkus-demo:v1 containers-storage:rhdevelopers/quarkus-demo:skopeo
 ----
---
-====
 
 [.console-output]
 [source,bash,subs="+macros,+attributes"]

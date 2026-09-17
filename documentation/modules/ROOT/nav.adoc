@@ -14,7 +14,6 @@
 ** xref:podman-desktop.adoc[Podman Desktop]
 ** xref:buildah.adoc[Buildah]
 ** xref:skopeo.adoc[Skopeo]
-** xref:jib.adoc[Jib]
 
 * Resources
 ** xref:resources.adoc[Containers]
