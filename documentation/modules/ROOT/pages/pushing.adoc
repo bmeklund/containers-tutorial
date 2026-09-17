@@ -4,42 +4,27 @@ So far you've been working with your container image locally. Now let's take it 
 
 [IMPORTANT]
 ====
-Before continuing you will need to have/create a container registry account. You can sign up for a free one at https://quay.io[Quay.io] or the https://hub.docker.com/[Docker Hub]. 
+Before continuing you will need to make sure you are logged in to your OpenShift cluster.
 
-Instructions on how to create your Quay.io account are available in the xref:setup.adoc[Setup] section.
+Instructions on how to do that you can find in the xref:accessenv.adoc#connect_your_workspace[Accessing your environment page].
 ====
 
 == Tagging an image
 
 First you'll need to tag your image accordingly to the registry and name you gave to your repository. Say for example we create a repository `my-image` in the organization id `your-user`.
 
-If you have a Docker Hub account:
-
+Since we are using OpenShifts internal registry it will look like this.
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-podman tag my-image docker.io/your-user/my-image
-----
-
-If using Quay.io:
-
-[.console-input]
-[source,bash,subs="+macros,+attributes"]
-----
-podman tag my-image quay.io/your-user/my-image
+podman tag my-image image-registry.openshift-image-registry.svc:5000/your-user/my-image
 ----
 
 IMPORTANT: Make sure to replace `your-user` with the name of your own user id or organization id.
 
 [TIP]
 ====
-If you build your image already using the tag, you won't need to do this step before pushing it. In our case it would be like this:
-
-[.console-input]
-[source,bash,subs="+macros,+attributes"]
-----
-podman build -t quay.io/your-user/my-image .
-----
+If you are using let's say Quay it will look like this instead: `podman tag my-image quay.io/your-user/my-image`
 
 ====
 
@@ -48,43 +33,20 @@ If you now run `podman images` you'll see something like this:
 [.console-output]
 [source,text]
 ----
-REPOSITORY                                   TAG                 IMAGE ID            CREATED             SIZE
-my-image                                     latest              a63dec174904        55 minutes ago      516MB
-quay.io/your-user/my-image                latest              a63dec174904        55 minutes ago      516MB
+REPOSITORY                                                            TAG                 IMAGE ID            CREATED             SIZE
+my-image                                                              latest              a63dec174904        55 minutes ago      516MB
+image-registry.openshift-image-registry.svc:5000/your-user/my-image   latest              a63dec174904        55 minutes ago      516MB
 ----
 
 == Pushing an image
 
-It's now ready to be pushed. Before doing it, you just need to login into your registry of choice within your terminal:
+It's now ready to be pushed. 
 
-[tabs]
-====
-Quay.io::
-+
---
-[.console-input]
-[source,bash,subs="+macros,+attributes"]
-----
-podman login quay.io
-----
---
-Docker Hub::
-+
---
-[.console-input]
-[source,bash,subs="+macros,+attributes"]
-----
-podman login
-----
---
-====
-
-And finally you can push it, eg.:
 
 [.console-input]  
 [source,bash,subs="+macros,+attributes"]
 ----
-podman push quay.io/your-user/my-image
+podman push image-registry.openshift-image-registry.svc:5000/your-user/my-image
 ----
 
 You should have an output like this:
@@ -92,7 +54,7 @@ You should have an output like this:
 [.console-output]
 [source,text]
 ----
-The push refers to repository [quay.io/your-user/my-image]
+The push refers to repository [image-registry.openshift-image-registry.svc:5000/your-user/my-image]
 abea900bc08c: Pushed
 99d5cac89a03: Pushed
 7b08010864ba: Pushed
@@ -101,4 +63,6 @@ f9ddbcc4e795: Pushed
 latest: digest: sha256:de852b7869b9eff45994b676f0dd98cbfb2b8a76a8b11ca6d06e8f93c344e8c9 size: 1371
 ----
 
-Now if you go to your https://quay.io[Quay.io] or https://hub.docker.com[Docker Hub] account you'll see your image right there.
+Now if you go to the OpenShift Console you'll see your image in the Builds/ImageStreams view.
+
+image::image-pushed-ocp.png[OpenShift Image streams]

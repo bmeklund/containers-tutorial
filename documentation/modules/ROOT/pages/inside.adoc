@@ -14,7 +14,6 @@ podman exec -it my-container /bin/bash
 
 Your terminal prompt should by now look like this:
 
-[.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
 [jboss@24543489a4b1 ~]$

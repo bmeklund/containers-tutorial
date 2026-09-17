@@ -1,5 +1,6 @@
 * Requirements
-** xref:setup.adoc[Setup]
+** xref:setup.adoc[Pre-setup]
+** xref:accessenv.adoc[Accessing the environment]
 
 * I. Basics
 ** xref:containerfile.adoc[Containerfile]

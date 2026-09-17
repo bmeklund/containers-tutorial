@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: Containers Tutorial
-  url: https://redhat-scholars.github.io/containers-tutorial
+  url: https://bmeklund.github.io/containers-tutorial
   start_page: containers-tutorial::index.adoc
 
 content:
